@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>开始使用layui</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <form class="layui-form  myform" action="/login" method="POST">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" required lay-verify="required" placeholder="请输入账号" autocomplete="off"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="passwd" required lay-verify="required" placeholder="请输入密码" autocomplete="off"
+                    class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">辅助文字</div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="mylogin">登录</button>
+            </div>
+        </div>
+    </form>
+    <!-- 你的HTML代码 -->
+    <script src="/layui/layui.all.js"></script>
+    <script>
+        let form = layui.form;
+        //监听提交
+        form.on('submit(mylogin)', function (data) {
+            // layer.msg(JSON.stringify(data.field));
+            // 发送数据到服务器，检查账号或者密码是否正确  ajax
+            // 创建XHR对象
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login');
+            // 设置请求头：告诉服务器，我这里提交的是表单
+            xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            // send只能发送字符串：
+            //{"username":"1","passwd":"2"}   username=1&passwd=2
+            let myobj = data.field;
+            let fdata = [];
+            for (const key in myobj) {
+                if (myobj.hasOwnProperty(key)) {
+                    fdata.push(key + '=' + myobj[key]);  //'username=1'
+                }
+            }
+            //['username=1', 'passwd=2']
+            console.log(fdata);
+            //把数据发送到服务器
+            xhr.send(fdata.join('&'));
+            // 状态监听事件
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    //表示服务器请求成功
+                    let result = xhr.responseText;
+                    console.log(result);
+                    if(result == 'pwd_err'){
+                        layer.msg('密码错误');
+                    }
+                }
+            }
+            return false;
+        });
+    </script>
+</body>
+
+</html>
