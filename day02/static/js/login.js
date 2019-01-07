@@ -43,7 +43,8 @@ function adminLogin(){
             xhr.onreadystatechange = function(){
                 if(xhr.readyState == 4 && xhr.status==200){
                     let result = xhr.responseText;
-                    result = JSON.parse(result);
+                    // 接收的是字符串类型，需要转成对象
+                    result = JSON.parse(result); 
                     console.log(result);
                     if(result.r == 'username_not_exist'){
                         username.parentElement.nextElementSibling.innerHTML = '*账号不存在';

@@ -38,6 +38,7 @@ app.get('/center', (req, res) => {
 app.post('/login', (req, res) => {
     let data = req.body;
     let sql =  'SELECT * FROM admin WHERE username = ?';
+    // 只有一个占位符的时候，可以不用数组
     mydb.query(sql, [data.username], (err, result)=>{
         if(err){
             console.log(err);
@@ -50,14 +51,13 @@ app.post('/login', (req, res) => {
         if(!result.length){
             res.json({r:'username_not_exist'});
             return;
-        } 
+        }
         // 判断密码是否正确
         if(result[0].passwd != data.passwd){
             res.json({r:'passwd_err'});
             return;
         }
         res.json({r:'ok'});
-
     });
 });
 // 静态资源托管 express.static
