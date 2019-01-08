@@ -30,7 +30,9 @@
                     <td><%= n++%></td>
                     <td><%= clist[i].cname%></td>
                     <td><%= new Date(clist[i].addtimes).toLocaleString()%></td>
-                    <td><a href="###" class="delc H" data-cid="<%= clist[i].cid%>">删除</a></td>
+                    <td><a href="###" class="delc H" data-cid="<%= clist[i].cid%>">删除</a>|
+                    <a class="H" href="/updatec?cid=<%= clist[i].cid%>">修改</a>
+                    </td>
                 </tr>
                 <%}%>
             </tbody>

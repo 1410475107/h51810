@@ -23,7 +23,6 @@ app.engine('html', ejs.renderFile);     //自定义模板引擎
 app.set('views', 'tpl');                //设置模板文件所在的文件夹
 app.set('view engine', 'html');         //注册模板引擎到express
 
-
 //各种路由
 app.get('/', (req, res) => {
     res.send('首页');
@@ -92,6 +91,27 @@ app.get('/delc', (req, res) => {
             res.json({r:'success'});
         }
     });
+});
+
+//修改信息   原始信息展示页面
+app.get('/updatec', (req ,res)=>{
+    let cid = req.query.cid;
+    //到数据库里面获取原始信息
+    let sql = 'SELECT * FROM class WHERE cid = ?';
+    mydb.query(sql, cid, (err, result)=>{
+        //[{cid:2, cname:'H51810'}]  result[0] == {cid:2, cname:'H51810'}  
+        res.render('updatec', result[0]);
+    });
+});
+
+app.post('/updateclass', (req, res) => {
+    console.log(req.body);
+    // 保存到数据库
+    let sql = 'UPDATE class SET  cname= ? WHERE cid = ?';
+    mydb.query(sql, [req.body.cname, req.body.cid], (err, result)=>{
+        res.send('ok');
+    });
+    
 });
 
 // 静态资源托管
