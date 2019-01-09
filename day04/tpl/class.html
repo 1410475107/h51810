@@ -1,0 +1,93 @@
+<% include head.html%>
+
+<div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div style="padding: 15px;">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">班级管理</a>
+            <a><cite>班级列表</cite></a>
+        </span>
+        <hr>
+        <div class="layui-form-item">
+            <form class="layui-form" action="/class" method="GET">
+                <div class="layui-inline">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">关键词</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="keywords" value="<%= keywords%>" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <!-- <button class="layui-btn addclass">查询</button> -->
+                            <input type="submit" name="submit" class="layui-btn addclass" value="查询">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>班级名称</th>
+                        <th>添加时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody class="classlist">
+                    <%
+                    let reg = new RegExp(keywords, "ig");
+                    n=1; 
+                    for(let i=0;i < clist.length; i++){
+                    %>
+                    <tr>
+                        <td>
+                            <%= clist[i].cid%>
+                        </td>
+                        <td>
+                            <%- clist[i].cname.replace(reg, `<span class="H">${keywords}</span>`)%>
+                        </td>
+                        <td>
+                            <%= new Date(clist[i].addtimes).toLocaleString()%>
+                        </td>
+                        <td><a href="###" class="delc H" data-cid="<%= clist[i].cid%>">删除</a>|
+                            <a class="H" href="/updatec?cid=<%= clist[i].cid%>">修改</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                </tbody>
+            </table>
+
+            <div id="test1">
+                <div class="layui-box layui-laypage layui-laypage-default">
+                    <% if(page <= 1){%>
+                    <a href="javascript:;"
+                        class="layui-laypage-prev layui-disabled">上一页</a>
+                      <%}else{%> 
+                        <a href="/class?page=<%= page - 1%>"
+                            class="layui-laypage-prev">上一页</a>
+                    <%}%>
+
+                    <%  for(let i=start; i <=end;i++){%>
+                        <% if(i==page){%>
+                            <span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em><%= i%></em></span>
+                        <%}else{%>
+                            <a href="/class?page=<%= i%>"><%= i%></a>
+                        <%}%>
+                    <%}%>
+                        
+                    <a href="/class?page=<%= page/1 + 1%>" class="layui-laypage-next">下一页</a></div>
+            </div>
+
+        </div>
+    </div>
+
+    <% include foot.html%>
