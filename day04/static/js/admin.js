@@ -5,7 +5,6 @@ window.onload = function () {
     delClass();
 }
 
-
 function updateClass() {
     let btn = document.querySelector('.updateclass');
     // if(!btn) return;
@@ -22,14 +21,14 @@ function updateClass() {
             return false;
         }
         // 通过ajax的方式把数据发送到服务器
-        axios.post('/updateclass', {
+        axios.post('/class/update', {
                 cname: c_value,
                 cid:cid
             })
             .then(function (response) {
                 console.log(response);
                 if (response.data == 'ok') {
-                    window.location.href = '/class';
+                    window.location.href = '/class/';
                 }
             })
             .catch(function (error) {})
@@ -49,7 +48,7 @@ function addClass() {
             return false;
         }
         // 通过ajax的方式把数据发送到服务器
-        axios.post('/addclass', {
+        axios.post('/class/add', {
                 cname: c_value
             })
             .then(function (response) {
@@ -75,7 +74,7 @@ function delClass() {
                 yes: function (index, layero) {
                     let cid = target.dataset.cid;
                     //到数据库删除对应的信息
-                    axios.get('/delc', {
+                    axios.get('/class/del', {
                         params: {
                             cid: cid
                         }

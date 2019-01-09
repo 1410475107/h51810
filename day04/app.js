@@ -1,4 +1,4 @@
-const express = require('express');
+global.express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mysql = require('mysql');
@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({extended: true}));//接收form-data
 app.use(bodyParser.json());  //接收json格式的数据
 
 // 数据库连接
-const mydb = mysql.createConnection({
+global.mydb = mysql.createConnection({
     host:'localhost',
     user:'root',
     password:'root',
@@ -58,87 +58,13 @@ app.get('/center', (req, res) => {
     res.render('center');
 });
 
-// 班级添加的相关路由
-app.get('/addclass', (req, res) => {
-    res.render('addclass');
-});
-app.post('/addclass', (req, res) => {
-    console.log(req.body);
-    // 保存到数据库
-    let sql = 'INSERT INTO  class(cname, addtimes) VALUES (?,NOW())';
-    mydb.query(sql, [req.body.cname], (err, result)=>{
-        res.send('ok');
-    });
-    
-});
-// 展示班级列表
-app.get('/class', (req, res) => {
-    // 实现分页
-    let pagenum = 10;  //每页显示多少条
-    let page = req.query.page ? req.query.page : 1;
-    
-    // 到数据库里面把数据查询出来
-    let sql = 'SELECT * FROM class WHERE status = 1';
-    // 如果用户输入le 关键词进行搜索  sql语句里面需要加上对应的判断条件  模糊查询
-    let kw = req.query.keywords;
-    if(kw){
-        sql += ' AND cname LIKE "%'+kw+'%"';
-    }else{
-        kw = '';
-    }
-    //显示当前页的数据
-    sql += ' LIMIT ?,?';
-    
-    // 循环的开始和结束位置
-    let shownum = 5; //总得要显示的页数
-    let start  =  page-Math.floor((shownum-1)/2); 
-    let end  = page/1 + Math.ceil((shownum-1)/2);
-    // 验证start是否小于1
-    if(start < 1){
-        start = 1;
-        // 重新计算end
-        end  = Math.ceil((shownum-1)/2) + Math.floor((shownum-1)/2) + start;
-    }
-    // TODO:验证end
+//班级管理的子路由
+app.use('/class', require('./router/class'));
+//学生管理的子路由
+app.use('/stu', require('./router/student'));
 
-    mydb.query(sql, [(page-1)*pagenum, pagenum],(err, results)=>{
-        console.log(results);
-        // 需要把传递的数据放到对象里面
-        res.render('class',{clist:results, keywords:kw, page:page, start:start, end:end});
-    });
-});
-// 删除班级的路由
-app.get('/delc', (req, res) => {
-    let cid = req.query.cid;
-    // let sql = 'DELETE FROM class WHERE cid = ?';
-    let sql = 'UPDATE class SET status = 2 WHERE cid = ?';
-    mydb.query(sql, cid, (err, result)=>{
-        if(!err){
-            res.json({r:'success'});
-        }
-    });
-});
-
-//修改信息   原始信息展示页面
-app.get('/updatec', (req ,res)=>{
-    let cid = req.query.cid;
-    //到数据库里面获取原始信息
-    let sql = 'SELECT * FROM class WHERE cid = ?';
-    mydb.query(sql, cid, (err, result)=>{
-        //[{cid:2, cname:'H51810'}]  result[0] == {cid:2, cname:'H51810'}  
-        res.render('updatec', result[0]);
-    });
-});
-
-app.post('/updateclass', (req, res) => {
-    console.log(req.body);
-    // 保存到数据库
-    let sql = 'UPDATE class SET  cname= ? WHERE cid = ?';
-    mydb.query(sql, [req.body.cname, req.body.cid], (err, result)=>{
-        res.send('ok');
-    });
-    
-});
+// 子路由：express.Router()
+app.use('/teacher', require('./router/teacher'));
 
 // 静态资源托管
 app.use(express.static(__dirname + '/static'));
