@@ -66,6 +66,9 @@ app.use('/stu', require('./router/student'));
 // 子路由：express.Router()
 app.use('/teacher', require('./router/teacher'));
 
+
+app.use('/admin/question', require('./router/admin/question'));
+
 // 静态资源托管
 app.use(express.static(__dirname + '/static'));
 app.listen(81, () => {
