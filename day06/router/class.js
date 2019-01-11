@@ -1,9 +1,12 @@
 const async = require('async');
 const router = express.Router();
 
+//如果没有登录，不能进行以下操作
+router.use(require('../mymodule/checklogin.js'));
+
 // 班级添加的相关路由
 router.get('/add', (req, res) => {
-    res.render('addclass');
+    res.render('addclass', {username:req.session.username});
 });
 router.post('/add', (req, res) => {
     // 保存到数据库
