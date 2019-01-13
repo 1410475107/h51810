@@ -4,7 +4,7 @@ const ejs = require('ejs');
 const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-
+const svgCaptcha = require('svg-captcha');
 const app = express();
 //开启cookie
 let secret = 'moc.01815h.www';
@@ -63,6 +63,7 @@ app.post('/login', (req, res) => {
         //设置session，表示登录授权
         req.session.aid = result[0].aid;
         req.session.username = result[0].username;
+
         
         //登录成功
         res.json({r:'ok'});
@@ -71,6 +72,19 @@ app.post('/login', (req, res) => {
 
 });
 
+
+//验证码生成路由
+app.get('/coder', (req, res) => {
+    //输出一张图片：验证码图片
+    let captcha = svgCaptcha.create();
+    console.log(captcha.text);
+    // 把图片上的文字信息存储在session里面
+	req.session.coder = captcha.text;
+	
+	res.type('svg');
+	res.status(200).send(captcha.data);
+
+});
 // 个人中心
 app.get('/center', (req, res) => {
     res.render('center');

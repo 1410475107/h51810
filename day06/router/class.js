@@ -14,7 +14,6 @@ router.post('/add', (req, res) => {
     mydb.query(sql, [req.body.cname], (err, result)=>{
         res.send('ok');
     });
-    
 });
 // 展示班级列表
 router.get('/', (req, res) => {

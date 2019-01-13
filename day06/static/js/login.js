@@ -1,5 +1,16 @@
 window.onload = function(){
     adminLogin(); //管理登录
+    coderReload();
+}
+
+
+function coderReload(){
+    let cimg = document.querySelector('#coder');
+    cimg && (
+        cimg.onclick = function () {
+            this.src = '/coder?_' + new Date();
+        }
+    );
 }
 
 // 管理员登录
