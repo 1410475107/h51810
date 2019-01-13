@@ -44,6 +44,14 @@ app.get('/', (req, res) => {
 //post路由
 app.post('/login', (req, res) => {
     let m = req.body;
+    //验证验证码是否正确
+    let coder = m.coder;
+    if(coder.toLowerCase() != req.session.coder.toLowerCase()){
+        res.json({
+            r: 'coder_err'
+        });
+        return;
+    }
     let sql = 'SELECT * FROM admin WHERE username = ?';
     mydb.query(sql, [m.username], (err, result) => {
         //检查账号是否存在
@@ -76,7 +84,10 @@ app.post('/login', (req, res) => {
 //验证码生成路由
 app.get('/coder', (req, res) => {
     //输出一张图片：验证码图片
-    let captcha = svgCaptcha.create();
+    let captcha = svgCaptcha.create({
+        background:'#ffdd33',
+        color: true
+    });
     console.log(captcha.text);
     // 把图片上的文字信息存储在session里面
 	req.session.coder = captcha.text;
