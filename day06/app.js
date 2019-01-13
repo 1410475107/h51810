@@ -85,8 +85,13 @@ app.post('/login', (req, res) => {
 app.get('/coder', (req, res) => {
     //输出一张图片：验证码图片
     let captcha = svgCaptcha.create({
-        background:'#ffdd33',
-        color: true
+        background:'#eeeeee',
+        color: false,
+        width:100,
+        noise: 3,
+        height:38,
+        fontSize:42,
+        ignoreChars: '0o1i'
     });
     console.log(captcha.text);
     // 把图片上的文字信息存储在session里面

@@ -9,4 +9,10 @@
 
 #coder{
     cursor: pointer;
+    float: left;
+}
+
+.coderinp{
+    float: left;
+    width: 90px;
 }
