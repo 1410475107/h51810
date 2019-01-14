@@ -155,6 +155,28 @@ app.post('/ajaxup', upload.single('imgs123456'), (req, res) => {
     res.send(req.file);
 });
 
+//在图片路径的前面加上域名
+let host = 'http://localhost:81/';
+app.post('/head', upload.single('headimg'), (req, res) => {
+    //接收上传上来的文件
+    console.log(req.file);
+    res.send(host + req.file.destination + '/' +  req.file.filename);
+});
+
+
+// 编辑器的图片上传接口
+app.post('/uploads', upload.array('myimgs'), (req, res) => {
+    let mydata = {};
+    mydata.errno = 0;
+    mydata.data = [];
+    console.log(req.files);
+    for (const img of req.files) {
+        let imgsrc = host + img.destination + '/' + img.filename;
+        mydata.data.push(imgsrc);
+    }
+    res.json(mydata);
+});
+
 //静态资源托管上传的  图片
 app.use('/uploads', express.static(__dirname + '/uploads'));
 

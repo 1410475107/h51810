@@ -6,3 +6,13 @@
 .H{
     color: #f01;
 }
+
+
+.dhead img{
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #eee;
+    cursor: pointer;
+}

@@ -3,6 +3,42 @@ window.onload = function () {
     addClass();
     updateClass();
     delClass();
+
+    addStu();
+}
+
+
+function addStu() {
+    let head = document.querySelector('#head');
+    head && (head.onchange = function () {
+            let formdata = new FormData();  //<form></from>
+            formdata.append('headimg', this.files[0]); //input type="file" name="headimg"
+            axios.post('/head', formdata)
+            .then(function (response) {
+                console.log(response.data);
+                document.querySelector('#showimg').src = response.data;
+                document.querySelector('input[name="myhead"]').value = response.data;
+            })
+            .catch(function (error) {
+            })
+        }
+    );
+
+    //保存数据到数据库 
+    let addbtn = document.querySelector('.addstu');
+    addbtn &&(addbtn.onclick = function(){
+        let data = {};
+        data.stuname = document.querySelector('input[name="stuname"]').value;
+        data.myhead = document.querySelector('input[name="myhead"]').value;
+        data.descp = document.querySelector('textarea[name="descp"]').value;
+        axios.post('/stu/add', data)
+        .then(function (response) {
+            console.log(response.data);
+        })
+        .catch(function (error) {
+        })
+    });
+
 }
 
 function updateClass() {
@@ -23,7 +59,7 @@ function updateClass() {
         // 通过ajax的方式把数据发送到服务器
         axios.post('/class/update', {
                 cname: c_value,
-                cid:cid
+                cid: cid
             })
             .then(function (response) {
                 console.log(response);
@@ -75,25 +111,23 @@ function delClass() {
                     let cid = target.dataset.cid;
                     //到数据库删除对应的信息
                     axios.get('/class/del', {
-                        params: {
-                            cid: cid
-                        }
-                    })
-                    .then(function (response) {
-                        console.log(response);
-                        layer.close(index); // 关闭弹窗
-                        // 隐藏或者删除当前行
-                        if(response.data.r == 'success'){
-                            //window.location.reload();//自动刷新 
-                            target.parentNode.parentNode.remove();
-                        }
-                    })
-                    .catch(function (error) {})
+                            params: {
+                                cid: cid
+                            }
+                        })
+                        .then(function (response) {
+                            console.log(response);
+                            layer.close(index); // 关闭弹窗
+                            // 隐藏或者删除当前行
+                            if (response.data.r == 'success') {
+                                //window.location.reload();//自动刷新 
+                                target.parentNode.parentNode.remove();
+                            }
+                        })
+                        .catch(function (error) {})
                 },
-                btn2: function (index, layero) {
-                },
-                cancel: function () {
-                }
+                btn2: function (index, layero) {},
+                cancel: function () {}
             });
         }
     })

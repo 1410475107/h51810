@@ -1,0 +1,72 @@
+<% include head.html%>
+
+<div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div style="padding: 15px;">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">学生管理</a>
+            <a><cite>学生添加</cite></a>
+        </span>
+        <hr>
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学生姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="stuname" placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux H"></div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">上传头像</label>
+                <div class="layui-input-inline">
+                    <label class="dhead" for="head">
+                        <img src="/img/df.jpg" alt="" id="showimg">
+                    </label>
+                    <input type="file" name="head" id="head" style="display:none">
+                    <input type="hidden" name="myhead" value="/img/df.jpg">
+                </div>
+                <div class="layui-form-mid layui-word-aux H"></div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">学生简介</label>
+                <div class="layui-input-inline" style="width:800px">
+                    <div id="editor">
+                        <p></p>
+                    </div>
+
+                    <textarea name="descp" id="descp" cols="30" rows="10" style="display:none"></textarea>
+                </div>
+                <div class="layui-form-mid layui-word-aux H"></div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn addstu" type="button">立即提交</button>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+<script type="text/javascript">
+    var E = window.wangEditor
+    var editor = new E('#editor')
+    // 或者 var editor = new E( document.getElementById('editor') )
+    var $text1 = document.getElementById('descp')
+    editor.customConfig.onchange = function (html) {
+        // 监控变化，同步更新到 textarea
+        $text1.value = html;
+    }
+
+    // 配置服务器端地址
+    editor.customConfig.uploadImgServer = '/uploads';
+    editor.customConfig.uploadFileName = 'myimgs'
+    editor.create()
+</script>
+<% include foot.html%>
